@@ -1,0 +1,16 @@
+{
+    "products": [
+        {
+            "name": "IBM Cloud HPC (DA)",
+            "label": "HPC Deployable Architecture",
+            "product_kind": "Deployable Architecture",
+            "tags": [
+                "Deployable Architecture",
+                "DA",
+                "HPC",
+                "IBM Cloud HPC"
+            ]
+        }
+
+    ]
+}
