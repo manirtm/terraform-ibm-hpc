@@ -326,6 +326,7 @@ spec:
           echo $allowed_cidr
           echo $ibmcloud_api_key
           ls -a
+          
           # cd $(pwd)/ && 
           # echo "export PATH=\$PATH:$(pwd)/go/bin:\$HOME/go/bin" >> ~/.bashrc && 
           # echo "export GOROOT=$(pwd)/go" >> ~/.bashrc
