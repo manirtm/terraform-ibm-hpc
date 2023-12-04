@@ -1,0 +1,113 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pipeline
+spec:
+  params:
+    - name: git-access-token
+      description: the token to access the git repository for the clone operations
+    - name: repository
+      description: the git repo
+    - name: branch
+      description: the branch for the git repo
+    - name: revision
+      description: the git revision/commit for the git repo
+      default: ""
+    - name: pipeline-debug
+      default: "false"
+      description: Enable debug output within pipeline
+    - name: ibmcloud_api_key
+      description: the api key used for authentication
+      default: ibmcloud_api_key
+    - name: bastion_ssh_keys
+      type: array
+      description: bastion_ssh_keys for login to clusters
+      default: []
+    - name: compute_ssh_keys
+      type: array
+      description: compute_ssh_keys for login to clusters
+      default: []
+    - name: login_ssh_keys
+      type: array
+      description: login_ssh_keys for login to clusters
+      default: []
+    - name: storage_ssh_keys
+      type: array
+      description: storage_ssh_keys for login to clusters
+      default: []
+    - name: zones
+      type: array
+      description: zones for provisioning the clusters
+      default: []
+    - name: prefix
+      description: prefix for provisioning the clusters
+      default: prefix
+    - name: resource_group
+      description: resource group for provisioning the clusters
+      default: resource_group
+    - name: allowed_cidr
+      type: array
+      description: allowed_cidr for provisioning the clusters
+      default: []
+    - name: enable_cos_integration
+      description: enable_cos_integration 
+      default: "false"
+    - name: enable_atracker
+      description: enable_atracker 
+      default: "false"
+    - name: enable_vpc_flow_logs
+      description: enable_vpc_flow_logs 
+      default: "false"
+    - name: key_management
+      description: key_management 
+      default: " "
+
+  workspaces:
+    - name: shared-data
+  tasks:
+    - name: wes-pipeline
+      taskRef:
+        name: git-clone-repo
+      workspaces:
+        - name: output
+          workspace: shared-data
+        - name: secrets
+          workspace: shared-data
+      params:
+        - name: git-access-token
+          value: $(params.git-access-token)
+        - name: repository
+          value: $(params.repository)
+        - name: branch
+          value: $(params.branch)
+        - name: revision
+          value: $(params.revision)
+        - name: pipeline-debug
+          value: $(params.pipeline-debug)
+        - name: ibmcloud_api_key
+          value: $(params.ibmcloud_api_key)
+        - name: bastion_ssh_keys
+          value: ["$(params.bastion_ssh_keys[*])"]
+        - name: compute_ssh_keys
+          value: ["$(params.compute_ssh_keys[*])"]
+        - name: login_ssh_keys
+          value: ["$(params.login_ssh_keys[*])"]
+        - name: storage_ssh_keys
+          value: ["$(params.storage_ssh_keys[*])"]
+        - name: zones
+          value: ["$(params.zones[*])"]
+        - name: prefix
+          value: $(params.prefix)
+        - name: resource_group
+          value: $(params.resource_group)
+        - name: allowed_cidr
+          value: ["$(params.allowed_cidr[*])"]
+        - name: enable_cos_integration
+          value: $(params.enable_cos_integration)
+        - name: enable_atracker
+          value: $(params.enable_atracker)
+        - name: enable_vpc_flow_logs
+          value: $(params.enable_vpc_flow_logs)
+        - name: key_management
+          value: $(params.key_management)
