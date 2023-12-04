@@ -271,11 +271,11 @@ spec:
           # rm -rf /tmp/deploy-release.sh
           # echo $'***** Terraform-Provisioner Installed *****\n'
 
-          echo $'***** Installing Terraform *****\n'
-          sudo yum install -y yum-utils
-          sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
-          sudo yum -y install terraform
-          terraform --version
+          # echo $'***** Installing Terraform *****\n'
+          # sudo yum install -y yum-utils
+          # sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+          # sudo yum -y install terraform
+          # terraform --version
           echo $'***** Terraform Installed *****\n'
 
     - name: hpc-deployable-architecture
@@ -310,33 +310,9 @@ spec:
       workingDir: "/artifacts"
       imagePullPolicy: Always
       command: ["/bin/bash", "-c"]
-      args:
-        - |
-          #!/bin/bash
-
-          if [[ "${PIPELINE_DEBUG}" == "true" ]]; then
-            pwd
-            env
-            trap env EXIT
-            set -x
-          fi
-          echo "**********"
-          echo ["$(params.zones[*])"]
-          echo "**********"
-          echo $bastion_ssh_keys
-          echo $zones
-          echo $prefix
-          echo $allowed_cidr
-          echo $ibmcloud_api_key
-          ls -a
-          
-          # cd $(pwd)/ && 
-          # echo "export PATH=\$PATH:$(pwd)/go/bin:\$HOME/go/bin" >> ~/.bashrc && 
-          # echo "export GOROOT=$(pwd)/go" >> ~/.bashrc
-          # source ~/.bashrc
-          # go version
-
-          # make run-tests-pipeline RUN=TestRunHpcBasicExample IBMCLOUD_API_KEY=$ibmcloud_api_key SSH_KEY=$ssh_key_name ZONE=$zone CONTRACT_ID=$contract_id RESOURCE_GROUP=$resource_group CLUSTER_ID=$cluster_id
+      args: ["$(params.zones[*])"]
+      script: |
+          echo "$@"
   volumes:
     - name: secrets
       secret:
