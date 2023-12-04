@@ -320,8 +320,9 @@ spec:
             trap env EXIT
             set -x
           fi
-          echo "$(params.zones[*])"
+          echo "**********"
           echo ["$(params.zones[*])"]
+          echo "**********"
           echo $bastion_ssh_keys
           echo $zones
           echo $prefix
