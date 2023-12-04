@@ -10,7 +10,7 @@ spec:
     - name: repository
       description: the git repo
     - name: branch
-      description: the branch for the git repo
+      description: the branch for the git repo's
     - name: revision
       description: the git revision/commit for the git repo
       default: ""
