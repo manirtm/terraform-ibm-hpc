@@ -265,12 +265,12 @@ spec:
           # rm -rf /tmp/deploy-release.sh
           # echo $'***** Terraform-Provisioner Installed *****\n'
 
-          # echo $'***** Installing Terraform *****\n'
-          # sudo yum install -y yum-utils
-          # sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
-          # sudo yum -y install terraform
-          # terraform --version
-          # echo $'***** Terraform Installed *****\n'
+          echo $'***** Installing Terraform *****\n'
+          sudo yum install -y yum-utils
+          sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+          sudo yum -y install terraform
+          terraform --version
+          echo $'***** Terraform Installed *****\n'
 
     - name: hpc-deployable-architecture
       image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:latest
@@ -314,14 +314,27 @@ spec:
             trap env EXIT
             set -x
           fi
+
           strToArray () {
               declare -a str_to_array=($(echo $1 | jq -Rc 'split(",")'))
               echo $str_to_array
                 }
-          result=$(strToArray $zones)
-          echo "**********"
-          echo $result
-          echo "**********"
+
+          terraform init
+          terraform plan \
+          -var resource_group=$resource_group \
+          -var zones=$(strToArray $zones) \
+          -var bastion_ssh_keys=$(strToArray $bastion_ssh_keys) \
+          -var compute_ssh_keys=$(strToArray $compute_ssh_keys) \
+          -var login_ssh_keys=$(strToArray $login_ssh_keys) \
+          -var storage_ssh_keys=$(strToArray $storage_ssh_keys) \
+          -var prefix=$prefix \
+          -var ibmcloud_api_key=$ibmcloud_api_key \
+          -var allowed_cidr=$(strToArray $allowed_cidr) \
+          -var enable_cos_integration=$enable_cos_integration \
+          -var enable_atracker=$enable_atracker \
+          -var enable_vpc_flow_logs=$enable_vpc_flow_logs \
+          -var key_management=$key_management
   volumes:
     - name: secrets
       secret:
