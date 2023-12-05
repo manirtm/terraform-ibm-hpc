@@ -293,6 +293,7 @@ spec:
             set -x
           fi
 
+          unzip terraform_1.4.4_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           terraform init
@@ -342,6 +343,7 @@ spec:
             set -x
           fi
 
+          unzip terraform_1.4.4_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           strToArray () {
@@ -409,7 +411,9 @@ spec:
             set -x
           fi
 
+          unzip terraform_1.4.4_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
+
           cd $(pwd)/ && 
           echo "export PATH=\$PATH:$(pwd)/go/bin:\$HOME/go/bin" >> ~/.bashrc && 
           echo "export GOROOT=$(pwd)/go" >> ~/.bashrc
@@ -457,6 +461,7 @@ spec:
             set -x
           fi
 
+          unzip terraform_1.4.4_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           terraform destroy -auto-approve -lock=false
