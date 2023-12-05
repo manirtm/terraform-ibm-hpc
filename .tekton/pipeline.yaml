@@ -21,25 +21,20 @@ spec:
       description: the api key used for authentication
       default: ibmcloud_api_key
     - name: bastion_ssh_keys
-      type: array
+      default: ""
       description: bastion_ssh_keys for login to clusters
-      default: []
     - name: compute_ssh_keys
-      type: array
+      default: ""
       description: compute_ssh_keys for login to clusters
-      default: []
     - name: login_ssh_keys
-      type: array
+      default: ""
       description: login_ssh_keys for login to clusters
-      default: []
     - name: storage_ssh_keys
-      type: array
+      default: ""
       description: storage_ssh_keys for login to clusters
-      default: []
     - name: zones
-      type: array
+      default: ""
       description: zones for provisioning the clusters
-      default: []
     - name: prefix
       description: prefix for provisioning the clusters
       default: prefix
@@ -47,9 +42,8 @@ spec:
       description: resource group for provisioning the clusters
       default: resource_group
     - name: allowed_cidr
-      type: array
+      default: ""
       description: allowed_cidr for provisioning the clusters
-      default: []
     - name: enable_cos_integration
       description: enable_cos_integration 
       default: "false"
@@ -61,7 +55,7 @@ spec:
       default: "false"
     - name: key_management
       description: key_management 
-      default: " "
+      default: ""
 
   workspaces:
     - name: shared-data
@@ -88,21 +82,21 @@ spec:
         - name: ibmcloud_api_key
           value: $(params.ibmcloud_api_key)
         - name: bastion_ssh_keys
-          value: ["$(params.bastion_ssh_keys[*])"]
+          value: $(params.bastion_ssh_keys)
         - name: compute_ssh_keys
-          value: ["$(params.compute_ssh_keys[*])"]
+          value: $(params.compute_ssh_keys)
         - name: login_ssh_keys
-          value: ["$(params.login_ssh_keys[*])"]
+          value: $(params.login_ssh_keys)
         - name: storage_ssh_keys
-          value: ["$(params.storage_ssh_keys[*])"]
+          value: $(params.storage_ssh_keys)
         - name: zones
-          value: $(params.zones[*])
+          value: $(params.zones)
         - name: prefix
           value: $(params.prefix)
         - name: resource_group
           value: $(params.resource_group)
         - name: allowed_cidr
-          value: ["$(params.allowed_cidr[*])"]
+          value: $(params.allowed_cidr)
         - name: enable_cos_integration
           value: $(params.enable_cos_integration)
         - name: enable_atracker

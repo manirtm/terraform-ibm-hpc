@@ -53,21 +53,21 @@ spec:
           - name: ibmcloud_api_key
             value: $(params.ibmcloud_api_key)
           - name: bastion_ssh_keys
-            value: ["$(params.bastion_ssh_keys[*])"]
+            value: $(params.bastion_ssh_keys)
           - name: compute_ssh_keys
-            value: ["$(params.compute_ssh_keys[*])"]
+            value: $(params.compute_ssh_keys)
           - name: login_ssh_keys
-            value: ["$(params.login_ssh_keys[*])"]
+            value: $(params.login_ssh_keys)
           - name: storage_ssh_keys
-            value: ["$(params.storage_ssh_keys[*])"]
+            value: $(params.storage_ssh_keys)
           - name: zones
-            value: $(params.zones[*])
+            value: $(params.zones)
           - name: prefix
             value: $(params.prefix)
           - name: resource_group
             value: $(params.resource_group)
           - name: allowed_cidr
-            value: ["$(params.allowed_cidr[*])"]
+            value: $(params.allowed_cidr)
           - name: enable_cos_integration
             value: $(params.enable_cos_integration)
           - name: enable_atracker

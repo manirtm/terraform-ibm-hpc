@@ -34,23 +34,23 @@ spec:
     - name: bastion_ssh_keys
       type: array
       description: bastion_ssh_keys for login to clusters
-      default: []
+      default: ""
     - name: compute_ssh_keys
       type: array
       description: compute_ssh_keys for login to clusters
-      default: []
+      default: ""
     - name: login_ssh_keys
       type: array
       description: login_ssh_keys for login to clusters
-      default: []
+      default: ""
     - name: storage_ssh_keys
       type: array
       description: storage_ssh_keys for login to clusters
-      default: []
+      default: ""
     - name: zones
       type: array
       description: zones for provisioning the clusters
-      default: []
+      default: ""
     - name: prefix
       description: prefix for provisioning the clusters
       default: prefix
@@ -60,7 +60,7 @@ spec:
     - name: allowed_cidr
       type: array
       description: allowed_cidr for provisioning the clusters
-      default: []
+      default: ""
     - name: enable_cos_integration
       description: enable_cos_integration 
       default: "false"
@@ -271,12 +271,12 @@ spec:
           # rm -rf /tmp/deploy-release.sh
           # echo $'***** Terraform-Provisioner Installed *****\n'
 
-          echo $'***** Installing Terraform *****\n'
-          sudo yum install -y yum-utils
-          sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
-          sudo yum -y install terraform
-          terraform --version
-          echo $'***** Terraform Installed *****\n'
+          # echo $'***** Installing Terraform *****\n'
+          # sudo yum install -y yum-utils
+          # sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+          # sudo yum -y install terraform
+          # terraform --version
+          # echo $'***** Terraform Installed *****\n'
 
     - name: hpc-deployable-architecture
       image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:latest
@@ -284,21 +284,21 @@ spec:
         - name: ibmcloud_api_key
           value: $(params.ibmcloud_api_key)
         - name: bastion_ssh_keys
-          value: ["$(params.bastion_ssh_keys[*])"]
+          value: $(params.bastion_ssh_keys)
         - name: compute_ssh_keys
-          value: ["$(params.compute_ssh_keys[*])"]
+          value: $(params.compute_ssh_keys)
         - name: login_ssh_keys
-          value: ["$(params.login_ssh_keys[*])"]
+          value: $(params.login_ssh_keys)
         - name: storage_ssh_keys
-          value: ["$(params.storage_ssh_keys[*])"]
+          value: $(params.storage_ssh_keys)
         - name: zones
-          value: $(params.zones[*])
+          value: $(params.zones)
         - name: prefix
           value: $(params.prefix)
         - name: resource_group
           value: $(params.resource_group)
         - name: allowed_cidr
-          value: ["$(params.allowed_cidr[*])"]
+          value: $(params.allowed_cidr)
         - name: enable_cos_integration
           value: $(params.enable_cos_integration)
         - name: enable_atracker
@@ -320,18 +320,14 @@ spec:
             trap env EXIT
             set -x
           fi
+          strToArray () {
+              declare -a str_to_array=($(echo $1 | jq -Rc 'split(",")'))
+              echo $str_to_array
+                }
+          result=$(strtoarray $zones)
           echo "**********"
-          echo $zones
+          echo $result
           echo "**********"
-          echo $bastion_ssh_keys
-          echo $zones
-          echo $prefix
-          echo $allowed_cidr
-          echo $ibmcloud_api_key
-
-          echo "&&&&&&&&&&&&&&"
-          ls -a
-
   volumes:
     - name: secrets
       secret:
