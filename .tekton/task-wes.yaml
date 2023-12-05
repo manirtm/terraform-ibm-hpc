@@ -266,10 +266,9 @@ spec:
           # echo $'***** Terraform-Provisioner Installed *****\n'
 
           echo $'***** Installing Terraform *****\n'
-          echo $PATH
           wget https://releases.hashicorp.com/terraform/1.4.4/terraform_1.4.4_linux_amd64.zip 
           unzip terraform_1.4.4_linux_amd64.zip
-          mv terraform $(pwd)/local/bin/terraform
+          mv terraform /usr/local/bin/terraform
           terraform --version
           # sudo yum install -y yum-utils
           # sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
@@ -319,6 +318,9 @@ spec:
             trap env EXIT
             set -x
           fi
+
+          unzip terraform_1.4.4_linux_amd64.zip
+          mv terraform /usr/local/bin/terraform
 
           strToArray () {
               declare -a str_to_array=($(echo $1 | jq -Rc 'split(",")'))
