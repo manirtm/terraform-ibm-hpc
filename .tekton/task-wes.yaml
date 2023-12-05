@@ -268,8 +268,8 @@ spec:
           echo $'***** Terraform-Provisioner Installed *****\n'
 
           echo $'***** Installing Terraform *****\n'
-          wget https://releases.hashicorp.com/terraform/1.4.4/terraform_1.4.4_linux_amd64.zip 
-          unzip terraform_1.4.4_linux_amd64.zip
+          wget https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip 
+          unzip terraform_1.5.7_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
           terraform --version
           echo $'***** Terraform Installed *****\n'
@@ -293,7 +293,7 @@ spec:
             set -x
           fi
 
-          unzip terraform_1.4.4_linux_amd64.zip
+          unzip terraform_1.5.7_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           terraform init
@@ -343,7 +343,7 @@ spec:
             set -x
           fi
 
-          unzip terraform_1.4.4_linux_amd64.zip
+          unzip terraform_1.5.7_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           strToArray () {
@@ -411,7 +411,7 @@ spec:
             set -x
           fi
 
-          unzip terraform_1.4.4_linux_amd64.zip
+          unzip terraform_1.5.7_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           cd $(pwd)/ && 
@@ -461,7 +461,7 @@ spec:
             set -x
           fi
 
-          unzip terraform_1.4.4_linux_amd64.zip
+          unzip terraform_1.5.7_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           terraform destroy -auto-approve -lock=false
