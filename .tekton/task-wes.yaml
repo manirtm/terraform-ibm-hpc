@@ -32,23 +32,18 @@ spec:
       description: the api key used for authentication
       default: ibmcloud_api_key
     - name: bastion_ssh_keys
-      type: array
       description: bastion_ssh_keys for login to clusters
       default: ""
     - name: compute_ssh_keys
-      type: array
       description: compute_ssh_keys for login to clusters
       default: ""
     - name: login_ssh_keys
-      type: array
       description: login_ssh_keys for login to clusters
       default: ""
     - name: storage_ssh_keys
-      type: array
       description: storage_ssh_keys for login to clusters
       default: ""
     - name: zones
-      type: array
       description: zones for provisioning the clusters
       default: ""
     - name: prefix
@@ -58,7 +53,6 @@ spec:
       description: resource group for provisioning the clusters
       default: resource_group
     - name: allowed_cidr
-      type: array
       description: allowed_cidr for provisioning the clusters
       default: ""
     - name: enable_cos_integration
