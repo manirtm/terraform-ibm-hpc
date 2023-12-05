@@ -318,7 +318,7 @@ spec:
               declare -a str_to_array=($(echo $1 | jq -Rc 'split(",")'))
               echo $str_to_array
                 }
-          result=$(strtoarray $zones)
+          result=$(strToArray $zones)
           echo "**********"
           echo $result
           echo "**********"
