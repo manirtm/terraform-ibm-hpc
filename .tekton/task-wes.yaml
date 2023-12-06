@@ -306,6 +306,7 @@ spec:
 
     - name: hpc-terraform-da-init
       image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:latest
+      onError: continue
       env:
         - name: PIPELINE_DEBUG
           value: $(params.pipeline-debug)
