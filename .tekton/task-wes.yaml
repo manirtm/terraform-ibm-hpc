@@ -244,9 +244,6 @@ spec:
             set -x
           fi
 
-          echo ${golang_version}
-          echo $((golang_version))
-          
           TF_DIR="/tmp"
 
           echo $'***** Installing IBMCLOUD and Plugins *****\n'
@@ -264,8 +261,8 @@ spec:
           echo $'***** Installing Golang *****\n'
           yum install wget -y
           [ ! -d "$(pwd)/go" ] && 
-          cd $(pwd) && wget https://go.dev/dl/go$((golang_version)).linux-amd64.tar.gz && 
-          tar -C $(pwd)/ -xzf go$((golang_version)).linux-amd64.tar.gz && 
+          cd $(pwd) && wget https://go.dev/dl/go${golang_version}.linux-amd64.tar.gz && 
+          tar -C $(pwd)/ -xzf go${golang_version}.linux-amd64.tar.gz && 
           cd $(pwd)/ && 
           echo "export PATH=\$PATH:$(pwd)/go/bin:\$HOME/go/bin" >> ~/.bashrc && 
           echo "export GOROOT=$(pwd)/go" >> ~/.bashrc
@@ -280,14 +277,14 @@ spec:
           echo $'***** Make Installed *****\n'
 
           echo $'***** Installing Python *****\n'
-          yum install python$((python_version)) -y
-          python$((python_version)) --version
+          yum install python${python_version} -y
+          python${python_version} --version
           echo $'***** Python Installed *****\n'
 
           echo $'***** Upgrading PIP and Installing Ansible *****\n'
           python3 -m pip install --upgrade pip
           pip install --root-user-action=ignore requests
-          python3 -m pip install ansible==$((ansible_version)) ansible-core==$((ansible_core_version))
+          python3 -m pip install ansible==${ansible_version} ansible-core==${ansible_core_version}
           ansible --version
           echo $'***** PIP Upgraded and Ansible Installed *****\n'
 
@@ -296,13 +293,13 @@ spec:
             https://raw.githubusercontent.com/radekg/terraform-provisioner-ansible/master/bin/deploy-release.sh \
             --output /tmp/deploy-release.sh
           chmod +x /tmp/deploy-release.sh
-          /tmp/deploy-release.sh -v $((terraform_provisioner_version))
+          /tmp/deploy-release.sh -v ${terraform_provisioner_version}
           rm -rf /tmp/deploy-release.sh
           echo $'***** Terraform-Provisioner Installed *****\n'
 
           echo $'***** Installing Terraform *****\n'
-          wget https://releases.hashicorp.com/terraform/$((terraform_version))/terraform_$((terraform_version))_linux_amd64.zip 
-          unzip terraform_$((terraform_version))_linux_amd64.zip
+          wget https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip 
+          unzip terraform_${terraform_version}_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
           terraform --version
           echo $'***** Terraform Installed *****\n'
@@ -328,7 +325,7 @@ spec:
             set -x
           fi
 
-          unzip terraform_$((terraform_version))_linux_amd64.zip
+          unzip terraform_${terraform_version}_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           terraform init
@@ -380,7 +377,7 @@ spec:
             set -x
           fi
 
-          unzip terraform_$((terraform_version))_linux_amd64.zip
+          unzip terraform_${terraform_version}_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           strToArray () {
@@ -453,7 +450,7 @@ spec:
             set -x
           fi
 
-          unzip terraform_$((terraform_version))_linux_amd64.zip
+          unzip terraform_${terraform_version}_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           cd $(pwd)/ && 
@@ -463,7 +460,7 @@ spec:
           go version
 
           strToArray () {
-              declare -a str_to_array=($(echo $1 | jq -Rc 'split(",")'))
+              declare -a str_to_array=($(echo $1 | jq -Rc 'split(","))
               echo $str_to_array
                 }
 
@@ -531,7 +528,7 @@ spec:
             set -x
           fi
 
-          unzip terraform_$((terraform_version))_linux_amd64.zip
+          unzip terraform_${terraform_version}_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           terraform destroy -auto-approve -lock=false \
