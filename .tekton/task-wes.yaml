@@ -460,12 +460,10 @@ spec:
           go version
 
           strToArray () {
-              declare -a str_to_array=($(echo $1 | jq -Rc 'split(","))
+              declare -a str_to_array=($(echo $1 | jq -Rc 'split(",")'))
               echo $str_to_array
                 }
 
-          terraform --version
-          
           terraform apply -auto-approve -lock=false \
           -var resource_group=$resource_group \
           -var zones=$(strToArray $zones) \
@@ -530,6 +528,11 @@ spec:
 
           unzip terraform_${terraform_version}_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
+
+          strToArray () {
+              declare -a str_to_array=($(echo $1 | jq -Rc 'split(",")'))
+              echo $str_to_array
+                }
 
           terraform destroy -auto-approve -lock=false \
           -var resource_group=$resource_group \
