@@ -62,7 +62,7 @@ spec:
             value: $(params.terraform_provider_version)
           - name: python_version
             value: $(params.python_version)
-            - name: ibmcloud_api_key
+          - name: ibmcloud_api_key
             value: $(params.ibmcloud_api_key)
           - name: bastion_ssh_keys
             value: $(params.bastion_ssh_keys)
