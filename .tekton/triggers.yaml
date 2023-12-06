@@ -58,8 +58,8 @@ spec:
             value: $(params.ansible_version)
           - name: ansible_core_version
             value: $(params.ansible_core_version)
-          - name: terraform_provider_version
-            value: $(params.terraform_provider_version)
+          - name: terraform_provisioner_version
+            value: $(params.terraform_provisioner_version)
           - name: python_version
             value: $(params.python_version)
           - name: ibmcloud_api_key
