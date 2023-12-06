@@ -243,6 +243,9 @@ spec:
             trap env EXIT
             set -x
           fi
+
+          echo ${golang_version}
+          echo $((golang_version))
           
           TF_DIR="/tmp"
 
