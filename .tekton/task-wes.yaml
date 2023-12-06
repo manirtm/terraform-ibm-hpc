@@ -14,6 +14,24 @@ spec:
     - name: revision
       description: the git revision/commit for the git repo
       default: ""
+    - name: terraform_version
+      description: terraform_version 
+      default: "1.5.7"
+    - name: golang_version
+      description: golang_version 
+      default: "1.21.0"
+    - name: ansible_version
+      description: ansible_version 
+      default: "4.10.0"
+    - name: ansible_core_version
+      description: ansible_core_version 
+      default: "2.11.12"
+    - name: terraform_provisioner_version
+      description: terraform_provisioner_version 
+      default: "2.3.3"
+    - name: python_version
+      description: python_version 
+      default: "3.9"
     - name: git-client-image
       description: The image to use to run git clone commands
       default: alpine/git
@@ -200,6 +218,18 @@ spec:
           value: $(params.repository)
         - name: PIPELINE_DEBUG
           value: $(params.pipeline-debug)
+        - name: terraform_version
+          value: $(params.terraform_version)
+        - name: golang_version
+          value: $(params.golang_version)
+        - name: ansible_version
+          value: $(params.ansible_version)
+        - name: ansible_core_version
+          value: $(params.ansible_core_version)
+        - name: terraform_provider_version
+          value: $(params.terraform_provider_version)
+        - name: python_version
+          value: $(params.python_version)
       workingDir: "/artifacts"
       imagePullPolicy: Always
       command: ["/bin/bash", "-c"]
@@ -231,8 +261,8 @@ spec:
           echo $'***** Installing Golang *****\n'
           yum install wget -y
           [ ! -d "$(pwd)/go" ] && 
-          cd $(pwd) && wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz && 
-          tar -C $(pwd)/ -xzf go1.21.0.linux-amd64.tar.gz && 
+          cd $(pwd) && wget https://go.dev/dl/go${golang_version}.linux-amd64.tar.gz && 
+          tar -C $(pwd)/ -xzf go${golang_version}.linux-amd64.tar.gz && 
           cd $(pwd)/ && 
           echo "export PATH=\$PATH:$(pwd)/go/bin:\$HOME/go/bin" >> ~/.bashrc && 
           echo "export GOROOT=$(pwd)/go" >> ~/.bashrc
@@ -247,14 +277,14 @@ spec:
           echo $'***** Make Installed *****\n'
 
           echo $'***** Installing Python *****\n'
-          yum install python3.9 -y
-          python3.9 --version
+          yum install python${python_version} -y
+          python${python_version} --version
           echo $'***** Python Installed *****\n'
 
           echo $'***** Upgrading PIP and Installing Ansible *****\n'
           python3 -m pip install --upgrade pip
           pip install --root-user-action=ignore requests
-          python3 -m pip install ansible==4.10.0 ansible-core==2.11.12
+          python3 -m pip install ansible==${ansible_version} ansible-core==${ansible_core_version}
           ansible --version
           echo $'***** PIP Upgraded and Ansible Installed *****\n'
 
@@ -263,13 +293,13 @@ spec:
             https://raw.githubusercontent.com/radekg/terraform-provisioner-ansible/master/bin/deploy-release.sh \
             --output /tmp/deploy-release.sh
           chmod +x /tmp/deploy-release.sh
-          /tmp/deploy-release.sh -v 2.3.3
+          /tmp/deploy-release.sh -v ${terraform_provider_version}
           rm -rf /tmp/deploy-release.sh
           echo $'***** Terraform-Provisioner Installed *****\n'
 
           echo $'***** Installing Terraform *****\n'
-          wget https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip 
-          unzip terraform_1.5.7_linux_amd64.zip
+          wget https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip 
+          unzip terraform_${terraform_version}_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
           terraform --version
           echo $'***** Terraform Installed *****\n'
@@ -279,6 +309,8 @@ spec:
       env:
         - name: PIPELINE_DEBUG
           value: $(params.pipeline-debug)
+        - name: terraform_version
+          value: $(params.terraform_version)
       workingDir: "/artifacts"
       imagePullPolicy: Always
       command: ["/bin/bash", "-c"]
@@ -293,7 +325,7 @@ spec:
             set -x
           fi
 
-          unzip terraform_1.5.7_linux_amd64.zip
+          unzip terraform_${terraform_version}_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           terraform init
@@ -329,6 +361,8 @@ spec:
           value: $(params.key_management)
         - name: PIPELINE_DEBUG
           value: $(params.pipeline-debug)
+        - name: terraform_version
+          value: $(params.terraform_version)
       workingDir: "/artifacts"
       imagePullPolicy: Always
       command: ["/bin/bash", "-c"]
@@ -343,7 +377,7 @@ spec:
             set -x
           fi
 
-          unzip terraform_1.5.7_linux_amd64.zip
+          unzip terraform_${terraform_version}_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           strToArray () {
@@ -398,6 +432,10 @@ spec:
           value: $(params.key_management)
         - name: PIPELINE_DEBUG
           value: $(params.pipeline-debug)
+        - name: terraform_version
+          value: $(params.terraform_version)
+        - name: golang_version
+          value: $(params.golang_version)
       workingDir: "/artifacts"
       imagePullPolicy: Always
       command: ["/bin/bash", "-c"]
@@ -412,7 +450,7 @@ spec:
             set -x
           fi
 
-          unzip terraform_1.5.7_linux_amd64.zip
+          unzip terraform_${terraform_version}_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           cd $(pwd)/ && 
@@ -446,8 +484,36 @@ spec:
     - name: hpc-terraform-da-destroy
       image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:latest
       env:
+        - name: ibmcloud_api_key
+          value: $(params.ibmcloud_api_key)
+        - name: bastion_ssh_keys
+          value: $(params.bastion_ssh_keys)
+        - name: compute_ssh_keys
+          value: $(params.compute_ssh_keys)
+        - name: login_ssh_keys
+          value: $(params.login_ssh_keys)
+        - name: storage_ssh_keys
+          value: $(params.storage_ssh_keys)
+        - name: zones
+          value: $(params.zones)
+        - name: prefix
+          value: $(params.prefix)
+        - name: resource_group
+          value: $(params.resource_group)
+        - name: allowed_cidr
+          value: $(params.allowed_cidr)
+        - name: enable_cos_integration
+          value: $(params.enable_cos_integration)
+        - name: enable_atracker
+          value: $(params.enable_atracker)
+        - name: enable_vpc_flow_logs
+          value: $(params.enable_vpc_flow_logs)
+        - name: key_management
+          value: $(params.key_management)
         - name: PIPELINE_DEBUG
           value: $(params.pipeline-debug)
+        - name: terraform_version
+          value: $(params.terraform_version)
       workingDir: "/artifacts"
       imagePullPolicy: Always
       command: ["/bin/bash", "-c"]
@@ -462,10 +528,23 @@ spec:
             set -x
           fi
 
-          unzip terraform_1.5.7_linux_amd64.zip
+          unzip terraform_${terraform_version}_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
-          terraform destroy -auto-approve -lock=false
+          terraform destroy -auto-approve -lock=false \
+          -var resource_group=$resource_group \
+          -var zones=$(strToArray $zones) \
+          -var bastion_ssh_keys=$(strToArray $bastion_ssh_keys) \
+          -var compute_ssh_keys=$(strToArray $compute_ssh_keys) \
+          -var login_ssh_keys=$(strToArray $login_ssh_keys) \
+          -var storage_ssh_keys=$(strToArray $storage_ssh_keys) \
+          -var prefix=$prefix \
+          -var ibmcloud_api_key=$ibmcloud_api_key \
+          -var allowed_cidr=$(strToArray $allowed_cidr) \
+          -var enable_cos_integration=$enable_cos_integration \
+          -var enable_atracker=$enable_atracker \
+          -var enable_vpc_flow_logs=$enable_vpc_flow_logs \
+          -var key_management=$key_management
   volumes:
     - name: secrets
       secret:
