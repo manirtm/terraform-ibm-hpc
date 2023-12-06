@@ -368,6 +368,7 @@ spec:
 
     - name: hpc-terraform-da-apply
       image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:latest
+      onError: continue
       env:
         - name: ibmcloud_api_key
           value: $(params.ibmcloud_api_key)
