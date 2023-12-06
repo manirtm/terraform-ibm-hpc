@@ -246,63 +246,63 @@ spec:
 
           TF_DIR="/tmp"
 
-          echo $'***** Installing IBMCLOUD and Plugins *****\n'
-          curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
-          ibmcloud plugin install schematics
-          ibmcloud plugin install vpc-infrastructure
-          echo $'***** Installed IBMCLOUD and Plugins *****\n'
+          # echo $'***** Installing IBMCLOUD and Plugins *****\n'
+          # curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
+          # ibmcloud plugin install schematics
+          # ibmcloud plugin install vpc-infrastructure
+          # echo $'***** Installed IBMCLOUD and Plugins *****\n'
 
-          echo $'***** Check Repository Private or Public *****\n'
-          if [[ "$REPOSITORY" == *"github.ibm.com"* ]]; then
-              git config --global url.ssh://git@github.ibm.com/.insteadOf https://github.ibm.com/
-              export GOPRIVATE=github.ibm.com/*
-          fi
+          # echo $'***** Check Repository Private or Public *****\n'
+          # if [[ "$REPOSITORY" == *"github.ibm.com"* ]]; then
+          #     git config --global url.ssh://git@github.ibm.com/.insteadOf https://github.ibm.com/
+          #     export GOPRIVATE=github.ibm.com/*
+          # fi
            
-          echo $'***** Installing Golang *****\n'
-          yum install wget -y
-          [ ! -d "$(pwd)/go" ] && 
-          cd $(pwd) && wget https://go.dev/dl/go${golang_version}.linux-amd64.tar.gz && 
-          tar -C $(pwd)/ -xzf go${golang_version}.linux-amd64.tar.gz && 
-          cd $(pwd)/ && 
-          echo "export PATH=\$PATH:$(pwd)/go/bin:\$HOME/go/bin" >> ~/.bashrc && 
-          echo "export GOROOT=$(pwd)/go" >> ~/.bashrc
-          source ~/.bashrc
-          go version
-          which go
-          echo $'***** Golang Installed Successfully *****\n'
+          # echo $'***** Installing Golang *****\n'
+          # yum install wget -y
+          # [ ! -d "$(pwd)/go" ] && 
+          # cd $(pwd) && wget https://go.dev/dl/go${golang_version}.linux-amd64.tar.gz && 
+          # tar -C $(pwd)/ -xzf go${golang_version}.linux-amd64.tar.gz && 
+          # cd $(pwd)/ && 
+          # echo "export PATH=\$PATH:$(pwd)/go/bin:\$HOME/go/bin" >> ~/.bashrc && 
+          # echo "export GOROOT=$(pwd)/go" >> ~/.bashrc
+          # source ~/.bashrc
+          # go version
+          # which go
+          # echo $'***** Golang Installed Successfully *****\n'
 
-          echo $'***** Installing Make *****\n'
-          yum install make
-          make --version 
-          echo $'***** Make Installed *****\n'
+          # echo $'***** Installing Make *****\n'
+          # yum install make
+          # make --version 
+          # echo $'***** Make Installed *****\n'
 
-          echo $'***** Installing Python *****\n'
-          yum install python${python_version} -y
-          python${python_version} --version
-          echo $'***** Python Installed *****\n'
+          # echo $'***** Installing Python *****\n'
+          # yum install python${python_version} -y
+          # python${python_version} --version
+          # echo $'***** Python Installed *****\n'
 
-          echo $'***** Upgrading PIP and Installing Ansible *****\n'
-          python3 -m pip install --upgrade pip
-          pip install --root-user-action=ignore requests
-          python3 -m pip install ansible==${ansible_version} ansible-core==${ansible_core_version}
-          ansible --version
-          echo $'***** PIP Upgraded and Ansible Installed *****\n'
+          # echo $'***** Upgrading PIP and Installing Ansible *****\n'
+          # python3 -m pip install --upgrade pip
+          # pip install --root-user-action=ignore requests
+          # python3 -m pip install ansible==${ansible_version} ansible-core==${ansible_core_version}
+          # ansible --version
+          # echo $'***** PIP Upgraded and Ansible Installed *****\n'
 
-          echo $'***** Installing Terraform-Provisioner *****\n'
-          curl -sL \
-            https://raw.githubusercontent.com/radekg/terraform-provisioner-ansible/master/bin/deploy-release.sh \
-            --output /tmp/deploy-release.sh
-          chmod +x /tmp/deploy-release.sh
-          /tmp/deploy-release.sh -v ${terraform_provisioner_version}
-          rm -rf /tmp/deploy-release.sh
-          echo $'***** Terraform-Provisioner Installed *****\n'
+          # echo $'***** Installing Terraform-Provisioner *****\n'
+          # curl -sL \
+          #   https://raw.githubusercontent.com/radekg/terraform-provisioner-ansible/master/bin/deploy-release.sh \
+          #   --output /tmp/deploy-release.sh
+          # chmod +x /tmp/deploy-release.sh
+          # /tmp/deploy-release.sh -v ${terraform_provisioner_version}
+          # rm -rf /tmp/deploy-release.sh
+          # echo $'***** Terraform-Provisioner Installed *****\n'
 
-          echo $'***** Installing Terraform *****\n'
-          wget https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip 
-          unzip terraform_${terraform_version}_linux_amd64.zip
-          mv terraform /usr/local/bin/terraform
-          terraform --version
-          echo $'***** Terraform Installed *****\n'
+          # echo $'***** Installing Terraform *****\n'
+          # wget https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip 
+          # unzip terraform_${terraform_version}_linux_amd64.zip
+          # mv terraform /usr/local/bin/terraform
+          # terraform --version
+          # echo $'***** Terraform Installed *****\n'
 
     - name: hpc-terraform-da-init
       image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:latest
@@ -377,177 +377,185 @@ spec:
             set -x
           fi
 
-          unzip terraform_${terraform_version}_linux_amd64.zip
-          mv terraform /usr/local/bin/terraform
-
-          strToArray () {
-              declare -a str_to_array=($(echo $1 | jq -Rc 'split(",")'))
-              echo $str_to_array
-                }
-
-          terraform plan -lock=false \
-          -var resource_group=$resource_group \
-          -var zones=$(strToArray $zones) \
-          -var bastion_ssh_keys=$(strToArray $bastion_ssh_keys) \
-          -var compute_ssh_keys=$(strToArray $compute_ssh_keys) \
-          -var login_ssh_keys=$(strToArray $login_ssh_keys) \
-          -var storage_ssh_keys=$(strToArray $storage_ssh_keys) \
-          -var prefix=$prefix \
-          -var ibmcloud_api_key=$ibmcloud_api_key \
-          -var allowed_cidr=$(strToArray $allowed_cidr) \
-          -var enable_cos_integration=$enable_cos_integration \
-          -var enable_atracker=$enable_atracker \
-          -var enable_vpc_flow_logs=$enable_vpc_flow_logs \
-          -var key_management=$key_management
-
-    - name: hpc-terraform-da-apply
-      image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:latest
-      onError: continue
-      env:
-        - name: ibmcloud_api_key
-          value: $(params.ibmcloud_api_key)
-        - name: bastion_ssh_keys
-          value: $(params.bastion_ssh_keys)
-        - name: compute_ssh_keys
-          value: $(params.compute_ssh_keys)
-        - name: login_ssh_keys
-          value: $(params.login_ssh_keys)
-        - name: storage_ssh_keys
-          value: $(params.storage_ssh_keys)
-        - name: zones
-          value: $(params.zones)
-        - name: prefix
-          value: $(params.prefix)
-        - name: resource_group
-          value: $(params.resource_group)
-        - name: allowed_cidr
-          value: $(params.allowed_cidr)
-        - name: enable_cos_integration
-          value: $(params.enable_cos_integration)
-        - name: enable_atracker
-          value: $(params.enable_atracker)
-        - name: enable_vpc_flow_logs
-          value: $(params.enable_vpc_flow_logs)
-        - name: key_management
-          value: $(params.key_management)
-        - name: PIPELINE_DEBUG
-          value: $(params.pipeline-debug)
-        - name: terraform_version
-          value: $(params.terraform_version)
-        - name: golang_version
-          value: $(params.golang_version)
-      workingDir: "/artifacts"
-      imagePullPolicy: Always
-      command: ["/bin/bash", "-c"]
-      args:
-        - |
-          #!/bin/bash
-
-          if [[ "${PIPELINE_DEBUG}" == "true" ]]; then
-            pwd
-            env
-            trap env EXIT
-            set -x
+          exitCode=`cat $(steps.hpc-terraform-da-init.exitCode.path)`
+          if [ $exitCode == 1 ]; then
+              echo "Yay! the exit code can be accessed using the path variable and matches the previous step exit code"
+          else
+              echo "the exit code does not match."
+              exit 1
           fi
 
-          unzip terraform_${terraform_version}_linux_amd64.zip
-          mv terraform /usr/local/bin/terraform
+          # unzip terraform_${terraform_version}_linux_amd64.zip
+          # mv terraform /usr/local/bin/terraform
 
-          cd $(pwd)/ && 
-          echo "export PATH=\$PATH:$(pwd)/go/bin:\$HOME/go/bin" >> ~/.bashrc && 
-          echo "export GOROOT=$(pwd)/go" >> ~/.bashrc
-          source ~/.bashrc
-          go version
+          # strToArray () {
+          #     declare -a str_to_array=($(echo $1 | jq -Rc 'split(",")'))
+          #     echo $str_to_array
+          #       }
 
-          strToArray () {
-              declare -a str_to_array=($(echo $1 | jq -Rc 'split(",")'))
-              echo $str_to_array
-                }
+          # terraform plan -lock=false \
+          # -var resource_group=$resource_group \
+          # -var zones=$(strToArray $zones) \
+          # -var bastion_ssh_keys=$(strToArray $bastion_ssh_keys) \
+          # -var compute_ssh_keys=$(strToArray $compute_ssh_keys) \
+          # -var login_ssh_keys=$(strToArray $login_ssh_keys) \
+          # -var storage_ssh_keys=$(strToArray $storage_ssh_keys) \
+          # -var prefix=$prefix \
+          # -var ibmcloud_api_key=$ibmcloud_api_key \
+          # -var allowed_cidr=$(strToArray $allowed_cidr) \
+          # -var enable_cos_integration=$enable_cos_integration \
+          # -var enable_atracker=$enable_atracker \
+          # -var enable_vpc_flow_logs=$enable_vpc_flow_logs \
+          # -var key_management=$key_management
 
-          terraform apply -auto-approve -lock=false \
-          -var resource_group=$resource_group \
-          -var zones=$(strToArray $zones) \
-          -var bastion_ssh_keys=$(strToArray $bastion_ssh_keys) \
-          -var compute_ssh_keys=$(strToArray $compute_ssh_keys) \
-          -var login_ssh_keys=$(strToArray $login_ssh_keys) \
-          -var storage_ssh_keys=$(strToArray $storage_ssh_keys) \
-          -var prefix=$prefix \
-          -var ibmcloud_api_key=$ibmcloud_api_key \
-          -var allowed_cidr=$(strToArray $allowed_cidr) \
-          -var enable_cos_integration=$enable_cos_integration \
-          -var enable_atracker=$enable_atracker \
-          -var enable_vpc_flow_logs=$enable_vpc_flow_logs \
-          -var key_management=$key_management
+    # - name: hpc-terraform-da-apply
+    #   image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:latest
+    #   onError: continue
+    #   env:
+    #     - name: ibmcloud_api_key
+    #       value: $(params.ibmcloud_api_key)
+    #     - name: bastion_ssh_keys
+    #       value: $(params.bastion_ssh_keys)
+    #     - name: compute_ssh_keys
+    #       value: $(params.compute_ssh_keys)
+    #     - name: login_ssh_keys
+    #       value: $(params.login_ssh_keys)
+    #     - name: storage_ssh_keys
+    #       value: $(params.storage_ssh_keys)
+    #     - name: zones
+    #       value: $(params.zones)
+    #     - name: prefix
+    #       value: $(params.prefix)
+    #     - name: resource_group
+    #       value: $(params.resource_group)
+    #     - name: allowed_cidr
+    #       value: $(params.allowed_cidr)
+    #     - name: enable_cos_integration
+    #       value: $(params.enable_cos_integration)
+    #     - name: enable_atracker
+    #       value: $(params.enable_atracker)
+    #     - name: enable_vpc_flow_logs
+    #       value: $(params.enable_vpc_flow_logs)
+    #     - name: key_management
+    #       value: $(params.key_management)
+    #     - name: PIPELINE_DEBUG
+    #       value: $(params.pipeline-debug)
+    #     - name: terraform_version
+    #       value: $(params.terraform_version)
+    #     - name: golang_version
+    #       value: $(params.golang_version)
+    #   workingDir: "/artifacts"
+    #   imagePullPolicy: Always
+    #   command: ["/bin/bash", "-c"]
+    #   args:
+    #     - |
+    #       #!/bin/bash
 
-    - name: hpc-terraform-da-destroy
-      image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:latest
-      env:
-        - name: ibmcloud_api_key
-          value: $(params.ibmcloud_api_key)
-        - name: bastion_ssh_keys
-          value: $(params.bastion_ssh_keys)
-        - name: compute_ssh_keys
-          value: $(params.compute_ssh_keys)
-        - name: login_ssh_keys
-          value: $(params.login_ssh_keys)
-        - name: storage_ssh_keys
-          value: $(params.storage_ssh_keys)
-        - name: zones
-          value: $(params.zones)
-        - name: prefix
-          value: $(params.prefix)
-        - name: resource_group
-          value: $(params.resource_group)
-        - name: allowed_cidr
-          value: $(params.allowed_cidr)
-        - name: enable_cos_integration
-          value: $(params.enable_cos_integration)
-        - name: enable_atracker
-          value: $(params.enable_atracker)
-        - name: enable_vpc_flow_logs
-          value: $(params.enable_vpc_flow_logs)
-        - name: key_management
-          value: $(params.key_management)
-        - name: PIPELINE_DEBUG
-          value: $(params.pipeline-debug)
-        - name: terraform_version
-          value: $(params.terraform_version)
-      workingDir: "/artifacts"
-      imagePullPolicy: Always
-      command: ["/bin/bash", "-c"]
-      args:
-        - |
-          #!/bin/bash
+    #       if [[ "${PIPELINE_DEBUG}" == "true" ]]; then
+    #         pwd
+    #         env
+    #         trap env EXIT
+    #         set -x
+    #       fi
 
-          if [[ "${PIPELINE_DEBUG}" == "true" ]]; then
-            pwd
-            env
-            trap env EXIT
-            set -x
-          fi
+    #       unzip terraform_${terraform_version}_linux_amd64.zip
+    #       mv terraform /usr/local/bin/terraform
 
-          unzip terraform_${terraform_version}_linux_amd64.zip
-          mv terraform /usr/local/bin/terraform
+    #       cd $(pwd)/ && 
+    #       echo "export PATH=\$PATH:$(pwd)/go/bin:\$HOME/go/bin" >> ~/.bashrc && 
+    #       echo "export GOROOT=$(pwd)/go" >> ~/.bashrc
+    #       source ~/.bashrc
+    #       go version
 
-          strToArray () {
-              declare -a str_to_array=($(echo $1 | jq -Rc 'split(",")'))
-              echo $str_to_array
-                }
+    #       strToArray () {
+    #           declare -a str_to_array=($(echo $1 | jq -Rc 'split(",")'))
+    #           echo $str_to_array
+    #             }
 
-          terraform destroy -auto-approve -lock=false \
-          -var resource_group=$resource_group \
-          -var zones=$(strToArray $zones) \
-          -var bastion_ssh_keys=$(strToArray $bastion_ssh_keys) \
-          -var compute_ssh_keys=$(strToArray $compute_ssh_keys) \
-          -var login_ssh_keys=$(strToArray $login_ssh_keys) \
-          -var storage_ssh_keys=$(strToArray $storage_ssh_keys) \
-          -var prefix=$prefix \
-          -var ibmcloud_api_key=$ibmcloud_api_key \
-          -var allowed_cidr=$(strToArray $allowed_cidr) \
-          -var enable_cos_integration=$enable_cos_integration \
-          -var enable_atracker=$enable_atracker \
-          -var enable_vpc_flow_logs=$enable_vpc_flow_logs \
-          -var key_management=$key_management
+    #       terraform apply -auto-approve -lock=false \
+    #       -var resource_group=$resource_group \
+    #       -var zones=$(strToArray $zones) \
+    #       -var bastion_ssh_keys=$(strToArray $bastion_ssh_keys) \
+    #       -var compute_ssh_keys=$(strToArray $compute_ssh_keys) \
+    #       -var login_ssh_keys=$(strToArray $login_ssh_keys) \
+    #       -var storage_ssh_keys=$(strToArray $storage_ssh_keys) \
+    #       -var prefix=$prefix \
+    #       -var ibmcloud_api_key=$ibmcloud_api_key \
+    #       -var allowed_cidr=$(strToArray $allowed_cidr) \
+    #       -var enable_cos_integration=$enable_cos_integration \
+    #       -var enable_atracker=$enable_atracker \
+    #       -var enable_vpc_flow_logs=$enable_vpc_flow_logs \
+    #       -var key_management=$key_management
+
+    # - name: hpc-terraform-da-destroy
+    #   image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:latest
+    #   env:
+    #     - name: ibmcloud_api_key
+    #       value: $(params.ibmcloud_api_key)
+    #     - name: bastion_ssh_keys
+    #       value: $(params.bastion_ssh_keys)
+    #     - name: compute_ssh_keys
+    #       value: $(params.compute_ssh_keys)
+    #     - name: login_ssh_keys
+    #       value: $(params.login_ssh_keys)
+    #     - name: storage_ssh_keys
+    #       value: $(params.storage_ssh_keys)
+    #     - name: zones
+    #       value: $(params.zones)
+    #     - name: prefix
+    #       value: $(params.prefix)
+    #     - name: resource_group
+    #       value: $(params.resource_group)
+    #     - name: allowed_cidr
+    #       value: $(params.allowed_cidr)
+    #     - name: enable_cos_integration
+    #       value: $(params.enable_cos_integration)
+    #     - name: enable_atracker
+    #       value: $(params.enable_atracker)
+    #     - name: enable_vpc_flow_logs
+    #       value: $(params.enable_vpc_flow_logs)
+    #     - name: key_management
+    #       value: $(params.key_management)
+    #     - name: PIPELINE_DEBUG
+    #       value: $(params.pipeline-debug)
+    #     - name: terraform_version
+    #       value: $(params.terraform_version)
+    #   workingDir: "/artifacts"
+    #   imagePullPolicy: Always
+    #   command: ["/bin/bash", "-c"]
+    #   args:
+    #     - |
+    #       #!/bin/bash
+
+    #       if [[ "${PIPELINE_DEBUG}" == "true" ]]; then
+    #         pwd
+    #         env
+    #         trap env EXIT
+    #         set -x
+    #       fi
+
+    #       unzip terraform_${terraform_version}_linux_amd64.zip
+    #       mv terraform /usr/local/bin/terraform
+
+    #       strToArray () {
+    #           declare -a str_to_array=($(echo $1 | jq -Rc 'split(",")'))
+    #           echo $str_to_array
+    #             }
+
+    #       terraform destroy -auto-approve -lock=false \
+    #       -var resource_group=$resource_group \
+    #       -var zones=$(strToArray $zones) \
+    #       -var bastion_ssh_keys=$(strToArray $bastion_ssh_keys) \
+    #       -var compute_ssh_keys=$(strToArray $compute_ssh_keys) \
+    #       -var login_ssh_keys=$(strToArray $login_ssh_keys) \
+    #       -var storage_ssh_keys=$(strToArray $storage_ssh_keys) \
+    #       -var prefix=$prefix \
+    #       -var ibmcloud_api_key=$ibmcloud_api_key \
+    #       -var allowed_cidr=$(strToArray $allowed_cidr) \
+    #       -var enable_cos_integration=$enable_cos_integration \
+    #       -var enable_atracker=$enable_atracker \
+    #       -var enable_vpc_flow_logs=$enable_vpc_flow_logs \
+    #       -var key_management=$key_management
   volumes:
     - name: secrets
       secret:
