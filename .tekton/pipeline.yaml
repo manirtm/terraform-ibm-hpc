@@ -135,3 +135,42 @@ spec:
           value: $(params.enable_vpc_flow_logs)
         - name: key_management
           value: $(params.key_management)
+          
+  finally:
+    - name: cleanup-resources
+      taskRef:
+        name: cleanup-resources
+      params:
+        - name: pipeline-debug
+          value: $(params.pipeline-debug)
+        - name: terraform_version
+          value: $(params.terraform_version)
+        - name: ibmcloud_api_key
+          value: $(params.ibmcloud_api_key)
+        - name: bastion_ssh_keys
+          value: $(params.bastion_ssh_keys)
+        - name: compute_ssh_keys
+          value: $(params.compute_ssh_keys)
+        - name: login_ssh_keys
+          value: $(params.login_ssh_keys)
+        - name: storage_ssh_keys
+          value: $(params.storage_ssh_keys)
+        - name: zones
+          value: $(params.zones)
+        - name: prefix
+          value: $(params.prefix)
+        - name: resource_group
+          value: $(params.resource_group)
+        - name: allowed_cidr
+          value: $(params.allowed_cidr)
+        - name: enable_cos_integration
+          value: $(params.enable_cos_integration)
+        - name: enable_atracker
+          value: $(params.enable_atracker)
+        - name: enable_vpc_flow_logs
+          value: $(params.enable_vpc_flow_logs)
+        - name: key_management
+          value: $(params.key_management)
+      workspaces:
+        - name: output
+          workspace: shared-data
