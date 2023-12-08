@@ -5,9 +5,6 @@ metadata:
   name: cleanup-resources
 spec:
   params:
-    - name: terraform_version
-      description: terraform_version 
-      default: "1.5.7"
     - name: pipeline-debug
       description: Pipeline debug mode. Value can be true or false. Default to false
       default: "false"
@@ -92,8 +89,6 @@ spec:
           value: $(params.key_management)
         - name: PIPELINE_DEBUG
           value: $(params.pipeline-debug)
-        - name: terraform_version
-          value: $(params.terraform_version)
       workingDir: "/artifacts"
       imagePullPolicy: Always
       command: ["/bin/bash", "-c"]
@@ -108,7 +103,7 @@ spec:
             set -x
           fi
 
-          unzip terraform_${terraform_version}_linux_amd64.zip
+          unzip terraform_1.5.7_linux_amd64.zip
           mv terraform /usr/local/bin/terraform
 
           strToArray () {
