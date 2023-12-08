@@ -113,8 +113,6 @@ spec:
       params:
         - name: pipeline-debug
           value: $(params.pipeline-debug)
-        - name: terraform_version
-          value: $(params.terraform_version)
         - name: ibmcloud_api_key
           value: $(params.ibmcloud_api_key)
         - name: bastion_ssh_keys
